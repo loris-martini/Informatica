@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CorrezioneVerifica:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CorrezioneVerifica_jar</output-path>
+    <root id="archive" name="CorrezioneVerifica.jar">
+      <element id="module-output" name="CorrezioneVerifica" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/commons-validator-1.7.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

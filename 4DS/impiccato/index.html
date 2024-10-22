@@ -1,0 +1,66 @@
+<html>
+    <head class="center">
+        <title>Gioco dell'Impiccato</title>
+        
+        <link rel="stylesheet" href="style.css">
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+
+    <body class="center">
+        <h1>Gioco dell'Impiccato</h1>
+
+        <div class="impostazioni" id="main">
+            <button onclick="start()" class="button">GIOCHIAMO</button>
+            <br>
+            <button onclick="exit()" class="button">FUORI DA QUA</button>
+        </div>
+
+        <div class="gameBoard hidden" id="game">
+            <div class="vite">
+                <h2>VITE<br></h2>
+            </div>
+    
+            <div class="parola">
+                <p>
+                    Parola: <input type="text" name="displayWord">
+                    <br>
+                    Lettere: <input type="text" name="usedLetters">
+                </p>
+            </parola>
+
+            <div class="tastiera">
+                <p>
+                    <button onclick="selectLetter('A');">A</button> | 
+                    <button onclick="selectLetter('B');">B</button> | 
+                    <button onclick="selectLetter('C');">C</button> | 
+                    <button onclick="selectLetter('D');">D</button> | 
+                    <button onclick="selectLetter('E');">E</button> | 
+                    <button onclick="selectLetter('F');">F</button> | 
+                    <button onclick="selectLetter('G');">G</button> | 
+                    <button onclick="selectLetter('H');">H</button> | 
+                    <button onclick="selectLetter('I');">I</button> | 
+                    <button onclick="selectLetter('J');">J</button> | 
+                    <button onclick="selectLetter('K');">K</button> | 
+                    <button onclick="selectLetter('L');">L</button> |
+                    <button onclick="selectLetter('M');">M</button>
+                    <br>
+                    <button onclick="selectLetter('N');">N</button> | 
+                    <button onclick="selectLetter('O');">O</button> | 
+                    <button onclick="selectLetter('P');">P</button> | 
+                    <button onclick="selectLetter('Q');">Q</button> | 
+                    <button onclick="selectLetter('R');">R</button> | 
+                    <button onclick="selectLetter('S');">S</button> | 
+                    <button onclick="selectLetter('T');">T</button> | 
+                    <button onclick="selectLetter('U');">U</button> | 
+                    <button onclick="selectLetter('V');">V</button> | 
+                    <button onclick="selectLetter('W');">W</button> | 
+                    <button onclick="selectLetter('X');">X</button> | 
+                    <button onclick="selectLetter('Y');">Y</button> | 
+                    <button onclick="selectLetter('Z');">Z</button>
+                </p>
+            </div>
+        </div>
+        
+        
+    </body>
+</html>

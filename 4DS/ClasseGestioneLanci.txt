@@ -1,0 +1,51 @@
+import java.util.Arrays;
+
+public class Gestione_Lanci {
+
+    private int[] lanci;
+    private int dimLog; //Lanci che ho fatto
+    private int lanciTot; //Lanci che posso fare
+
+    Gestione_Lanci(int lung){
+        lanciTot = lung;
+        if(lung <= 0){
+            //se minore  o uguale a 0 setto direttamente a 10 lanci
+            lanciTot = 10;
+        }
+        lanci = new int[lanciTot];
+    }
+
+    public double[] calcProbTot(int nLanci){
+        if(nLanci > (lanciTot - dimLog)){
+            lanciTot += (nLanci - lanciTot);
+            lanci = Arrays.copyOf(lanci, lanciTot);
+        }
+        dimLog += nLanci;
+
+        Dado d1 = new Dado();
+        for(int i = 1; i < nLanci; i++){
+            lanci[dimLog + i] = d1.lanciaDado();
+        }
+
+        int numFaces = d1.getnFaccie();
+        double[] freq = new double[numFaces];
+
+        for(int i = 0; i < numFaces; i++){
+            int conto = 0;
+            for(int lanciati : lanci){
+                if(lanciati == i){
+                    conto++;
+                }
+            }
+            double prob = 1.0 / numFaces;
+            freq[i] = (double) conto / dimLog;
+        }
+
+        return freq;
+    }
+
+
+    public String toString() {
+        return super.toString();
+    }
+}

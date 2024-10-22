@@ -1,0 +1,26 @@
+import java.util.Random;
+public class Dado{
+    private int nFaccie;
+
+    public Dado(){}
+
+    public void setnFaccie(int faccieTot) {
+        if(faccieTot <= 0){
+            //se faccie minore di 0 setto direttamente a 6 faccie
+            nFaccie = 6;
+        }
+        nFaccie = faccieTot;
+    }
+
+    public int getnFaccie() {
+        return nFaccie;
+    }
+
+    public int lanciaDado(){
+        Random rand = new Random();
+        int facc = 0;
+        facc = rand.nextInt(1, nFaccie);
+        return facc;
+    }
+
+}

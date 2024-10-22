@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Contatore</title>
+        <link rel="stylesheet" href="style.css">
+        <h1>PROVA</h1>
+    </head>
+
+    <body>
+        <div class="tabella">
+            <h2>SCEGLI LA PAGINA</h2>
+            <input type="button" value="conatore" onclick="scelta(1)">
+            <input type="button" value="testo" onclick="scelta(2)">
+            <input type="button" value="easy" onclick="scelta(3)">
+        </div>
+
+        <div class="contatore hidden">
+            <div class="count">0</div>
+            <input type="button" value="PREMI" onclick="add()">
+        </div>
+
+       
+
+        <div class="in hidden">
+            <input type="text" id="test" value="inserisci">
+            <input type="button" value="Conferma" onclick="scrivi()">
+            <div id="show">inserisci</div>
+        </div>
+
+        <br><br>
+        <div class="back hidden">
+            <input type="button" value="Back" onclick="back()">
+        </div>
+        <script type="text/javascript" src="script.js"></script>
+    </body>
+</html>

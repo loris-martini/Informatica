@@ -1,0 +1,30 @@
+import java.util.Scanner;
+import java.util.Random;
+
+class Main {
+  public static void main(String[] args) {
+
+    Scanner input = new Scanner(System.in);
+    
+    int i;
+    int count = 0;
+    int media = 0;
+    int[] temp = new int[10];
+
+    //Carico l'Array
+    for(i = 0; i < 10; i++){
+      System.out.println("Inserire una Temperatura: ");
+      temp[i] = input.nextInt();
+      media += temp[i];
+    }
+    media /= 10;
+
+    for(i = 0; i < 10; i++){
+      if(temp[i] < media){
+        count += 1;
+      }
+    }
+    System.out.println("la Temperatura media è: " + media);
+    System.out.println("Numero di giorni dove la temperatura è sotto alla media: " + count);
+  }
+}
