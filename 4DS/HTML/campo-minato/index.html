@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Campo Minato</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@700&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
+
+  <!-- Foglio di stile -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="game-container">
+    <!-- Pannello informazioni di gioco -->
+    <div class="game-panel">
+      <h1>Campo Minato</h1>
+
+      <!-- Punteggio -->
+      <div class="score hidden">
+        <span class="score-label">SCORE</span>
+        <span class="score-counter">00000</span>
+      </div>
+      <!-- MENU -->
+      <br>
+      <div class="scelta">
+        <button onclick=gioca(1)>Livello 1</button>
+        <button onclick=gioca(2)>Livello 2</button>
+        <button onclick=gioca(3)>Livello 3</button>
+      </div>
+
+    </div>
+
+    <!-- Tabellone di gioco -->
+    <div class="game-board hidden">
+      <div class="grid">
+        <!-- Qui ci saranno le celle -->
+
+      </div>
+
+      <!-- Schermata di fine gioco -->
+      <div class="end-game-screen hidden">
+        <h2 class="end-game-text">Game<br>Over</h2>
+        <button class="play-again">Gioca ancora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>

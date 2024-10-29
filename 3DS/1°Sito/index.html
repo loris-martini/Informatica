@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01
+Transitional//IT">
+<html>
+    <head>
+        <title>Modello Client-Server</title>
+        <h1 style="font-size:92px;text-align:center"><b><i>Modello Client-Server</i></b></h1>
+    </head>
+    <body style="background-image:url(images/background.jpg)" leftmargin="0" topmargin="0" text="white">
+        <br>
+        <br>
+        <h2>| Che cos’è?</h2>
+        <p>| L’architettura client/server è un modello di elaborazione in cui il server ospita, consegna e gestisce la maggior parte delle risorse e dei servizi che devono essere consumati dal client.
+        </p>
+        <br>
+        <br>
+        <h2>|Caratteristiche del client e del server</h2>
+        <p><b>| Il Server</b> può essere definito come il fornitore del servizio e generalmente possiede un indirizzo di IP statico. Se un server  è in comunicazione multicast potrebbe riceve troppe richieste contemporaneamente ed entrare quindi in uno stato di congestione,quindi è necessaria la virtualizzazione della risorsa mediante una server farm, ossia assegnare al servizio un unico hostname utilizzando più indirizzi IP, trasparenti rispetto ai client, sui quali vengono dirottate le richieste di connessione.
+        </p>
+        <br>
+        <p><b>| Il client</b> al contrario del server può essere visto come lo sfruttatore del servizio e possiede un IP generalmente dinamico. Il client non può comunicare con gli altri client ma solo con il server 
+        </p>
+        <br>
+        <br>
+        <h2>| Come funziona?</h2>
+        <p>| 1) Il client manda una richiesta al server</p>
+        <p>| 2) Il server (perennemente in attesa) riceve la richiesta</p>
+        <p>| 3) Il server esegue il servizio richiesto (né può eseguire diversi nello stesso momento)</p>
+        <p>| 4) Il server manda una risposta ed eventualmente dei dati al client.</p>
+        <p>| 5) Il client riceve la risposta è gli eventuali dati.</p>
+        <br>
+        <h2><i>| Esempi di servizi tipici:</i></h2>
+        <p>| HTTP e HTTPS utilizzati per la trasmissione d’informazioni sul web.</p>
+        <p>| FTP utilizzato per il trasferimento di dati tra diversi host.</p>
+        <p>| Telnet utilizzato per il controllo di computer da remoto.</p>
+        <br>
+        <br>
+        <h2>| Modalità di comunicazione</h2>
+        <p><b>| Unicast:</b> il server comunica con un solo client per volta e accetta una solo richiesta di connessione per volta.</p>
+        <p><b>| Multicast:</b> al server possono essere connessi e possono comunicare più client contemporaneamente.</p>
+
+    </body>
+</html>

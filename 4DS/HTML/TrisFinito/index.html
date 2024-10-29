@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <title>Tic Tac Toe</title>
+  <meta name="description" content="Multiplayer Tic Tac Toe Game">
+  <link rel="style.css">
+</head>
+
+<body class="center">
+  <h1>Tic Tac Toe Game</h1>
+    <div class="center" id="main">
+      <button onclick="start()" class="button">GIOCHIAMO</button>
+      <br>
+      <button onclick="learn()" class="button">IMPARIAMO A GIOCARE</button>
+      <br>
+      <button onclick="exit()" class="button">FUORI DA QUA</button>
+    </div>
+    <div class="center" id="learn">
+      <p>
+          FAI TRIS
+      </p>
+
+      <button onclick="main()" class="button">IN DIETRO</button>
+    </div>
+    <div class="center" id="game">
+      <div class="center" style="margin: 5px;">
+        <h3 id="textPlayer" style="font-size: 0.9rem;">(Sta giocando X)</h2>
+          <h3 id="textComd" style="font-size: 0.9rem;">O ora puo` giocare...</h2>
+      </div>
+      <canvas id="tic-tac-toe-board" class="center"></canvas>
+    </div>
+    <!-- Script OF Game -->
+    <script src="script.js"></script>
+</body>
+
+</html>

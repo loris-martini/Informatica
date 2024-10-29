@@ -1,0 +1,33 @@
+ul#menu {
+    font-family:'Times New Roman', serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    list-style:none;
+}
+
+ul#menu li{
+    background-color:aquamarine ;
+    border-bottom: 5px solid green;
+    display:block;
+    ;
+    ;
+    margin: 2px;
+}
+
+ul#menu li a{
+    color: black;
+    display: block;
+    font-weight: bold;
+    padding-left: 15px;
+    text-decoration: none;
+    ;
+    ;
+    text-align: center;
+}
+
+ul#menu li:hover{
+    background-color:aqua;
+    border-bottom: 3px solid blue;
+}
+
