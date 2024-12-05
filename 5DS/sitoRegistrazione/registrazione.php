@@ -10,27 +10,44 @@
 </style>
 
 <?php
+session_start();
 $nameErr = $surNameErr = $emailErr = $passwordErr = "";
+$isFormValid = true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($_POST["name"])) {
     $nameErr = "Name is required";
+    $isFormValid = false;
   }
 
   if (empty($_POST["surname"])) {
     $surNameErr = "Surname is required";
+    $isFormValid = false;
   }
 
   if (empty($_POST["mail"])) {
     $emailErr = "Email is required";
+    $isFormValid = false;
   }
 
   if (empty($_POST["pwd"])) {
     $passwordErr = "Password is required";
+    $isFormValid = false;
+  }
+
+  if ($isFormValid) {
+    $_SESSION['user'] = [
+      'name' => $_POST['name'],
+      'surname' => $_POST['surname'],
+      'email' => $_POST['mail'],
+      'password' => $_POST['pwd']
+    ];
+    header("Location: login.php");
+    exit();
   }
 }
-
 ?>
+
 
 <body>
   <!-- Navbar -->
@@ -57,7 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- registrazione Content -->
   <div class="container my-5">
     <h1 class="text-center">Registrazione</h1>
-    <form class="row g-3" action="database.php" method="POST">
+
+    <form class="row g-3" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
       <div class="col-md-6">
         <label for="inputName" class="form-label">Nome</label>
         <span class="error">* <?= $nameErr;?></span>
@@ -78,14 +96,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <span class="error">* <?= $passwordErr;?></span>
         <input type="text" class="form-control" id="text" name="pwd">
       </div>
-      <input class="btn btn-light btn-lg" type="submit" value="Registrati">
+      <input class="btn btn-light btn-lg" type="submit" name="submit" value="Registrati">
     </form>
   </div>
 
-
   <!-- Footer -->
   <footer class="bg-light text-center p-3 mt-5">
-    <p>ITT BUONARROTI TRENTO</p>
+    <p><b>ITT BUONARROTI TRENTO</b></p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
