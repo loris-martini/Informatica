@@ -11,27 +11,24 @@
 
 <?php
 session_start();
-$nameErr = $surNameErr = $emailErr = $passwordErr = "";
+$name = $surname = $email = $pwd = $emailErr = $passwordErr = "";
 $isFormValid = true;
 
+// Controlla se i dati del form sono inviati
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (empty($_POST["name"])) {
-    $nameErr = "Name is required";
+  $name = test_input($_POST['name']);
+  $surname = test_input($_POST['surname']);
+  $email = test_input($_POST['mail']);
+  $pwd = test_input($_POST['pwd']);
+
+
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $emailErr = "Invalid email format";
     $isFormValid = false;
   }
 
-  if (empty($_POST["surname"])) {
-    $surNameErr = "Surname is required";
-    $isFormValid = false;
-  }
-
-  if (empty($_POST["mail"])) {
-    $emailErr = "Email is required";
-    $isFormValid = false;
-  }
-
-  if (empty($_POST["pwd"])) {
-    $passwordErr = "Password is required";
+  if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $pwd)){
+    $passwordErr = "Password is invalid!";
     $isFormValid = false;
   }
 
@@ -45,6 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: login.php");
     exit();
   }
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
 }
 ?>
 
@@ -61,40 +65,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a class="nav-link active" aria-current="page" href="index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="registrazione.html">Registrazione</a>
+            <a class="nav-link" href="registrazione.php">Registrazione</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="login.html">Login</a>
+            <a class="nav-link" href="login.php">Login</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   
-  <!-- registrazione Content -->
+  <!-- registrazione Content 
+   id="text"
+   id="text"
+   id="inputEmail"
+   id="text"
+   -->
   <div class="container my-5">
     <h1 class="text-center">Registrazione</h1>
 
     <form class="row g-3" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
       <div class="col-md-6">
         <label for="inputName" class="form-label">Nome</label>
-        <span class="error">* <?= $nameErr;?></span>
-        <input type="text" class="form-control" id="text" name="name">
+        <input type="text" class="form-control" name="name" value="<?=$name?>" placeholder="Name" required>
       </div>
       <div class="col-md-6">
         <label for="inputName" class="form-label">Cognome</label>
-        <span class="error">* <?= $surNameErr;?></span>
-        <input type="text" class="form-control" id="text" name="surname">
+        <input type="text" class="form-control" name="surname" value="<?=$surname?>" required>
       </div>
       <div class="col-md-6">
         <label for="inputName" class="form-label">E-mail</label>
         <span class="error">* <?= $emailErr;?></span>
-        <input type="email" class="form-control" id="inputEmail" name="mail">
+        <input type="email" class="form-control" name="mail" value="<?=$email?>" required>
       </div>
       <div class="col-md-6">
         <label for="inputEmail" class="form-label">Password</label>
         <span class="error">* <?= $passwordErr;?></span>
-        <input type="text" class="form-control" id="text" name="pwd">
+        <input type="password" class="form-control" name="pwd" required>
       </div>
       <input class="btn btn-light btn-lg" type="submit" name="submit" value="Registrati">
     </form>

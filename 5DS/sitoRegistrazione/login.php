@@ -11,8 +11,8 @@ $loginErr = "";
 
 // Controlla se i dati del form sono inviati
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = $_POST['mail'];
-  $password = $_POST['pwd'];
+  $email = test_input($_POST['mail']);
+  $password = test_input($_POST['pwd']);
 
   // Verifica le credenziali dalla sessione
   if (isset($_SESSION['user']) && $_SESSION['user']['email'] === $email && $_SESSION['user']['password'] === $password) {
@@ -21,6 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } else {
     $loginErr = "Email o password non valide.";
   }
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
 }
 ?>
 
@@ -36,36 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a class="nav-link active" aria-current="page" href="index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="registrazione.html">Registrazione</a>
+            <a class="nav-link" href="registrazione.php">Registrazione</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="login.html">Login</a>
+            <a class="nav-link" href="login.php">Login</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Login Content 
-  <div class="container my-5">
-    <h1 class="text-center">Login</h1>
-    <form class="row g-3">
-      <div class="col-md-6">
-        <label for="inputName" class="form-label">E-mail</label>
-        <input type="text" class="form-control" id="inputName" required>
-      </div>
-      <div class="col-md-6">
-        <label for="inputEmail" class="form-label">Password</label>
-        <input type="email" class="form-control" id="inputEmail" required>
-      </div>
-    </form>
-          
-  <div class="text-center">
-    <br>
-    <a href="index.html" class="btn btn-light btn-lg">Accedi</a>
-  </div>
-  </div>
-  -->
 
   <div class="container my-5">
     <h1 class="text-center">Login</h1>
@@ -73,15 +59,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
       <div class="mb-3">
         <label for="inputEmail" class="form-label">E-mail</label>
-        <input type="email" class="form-control" id="inputEmail" name="mail" required>
+        <input type="email" class="form-control" name="mail" required>
       </div>
       <div class="mb-3">
         <label for="inputPassword" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword" name="pwd" required>
+        <input type="password" class="form-control" name="pwd" required>
       </div>
       <span class="text-danger"><?= $loginErr; ?></span>
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
+
   </div>
 
     <!-- Footer -->

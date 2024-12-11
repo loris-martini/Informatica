@@ -5,9 +5,35 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
+<style>
+  h1,h2,h3{
+    text-align: center;
+  }
+</style>
+
+<?php
+//json_encode($_SESSION['user'])
+  session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['delete'] == "delete") {
+    session_destroy();
+    header("Location: index.html"); // Reindirizza alla homepage
+    exit();
+}
+?>
 
 <body>
-    CIAO
+  <br>
+    <h1>Ciao <b><?= $_SESSION['user']['name']?> <?=$_SESSION['user']['surname']?></b></h1>
+    <br>
+    <h2>Informazioni Personali:</h2>
+    <h3><?= $_SESSION['user']['email']?>
+    <br>
+    <br>
+    <form action="<?= $_SERVER["PHP_SELF"]?>" method="POST">
+      <input type="hidden" name="delete" value="delete">
+      <button type="submit" class="btn btn-primary">ELIMINA DATI</button>
+    </form>
 </body>
   
 
