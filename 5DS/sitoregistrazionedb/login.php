@@ -1,3 +1,8 @@
+<?php
+    include 'connessione.php';
+    include 'funzioni.php';
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -6,7 +11,6 @@
 </head>
 
 <?php
-session_start(); // Avvia la sessione
 $loginErr = "";
 
 // Controlla se i dati del form sono inviati
@@ -14,13 +18,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = test_input($_POST['mail']);
   $password = test_input($_POST['pwd']);
 
+  $sql = "SELECT 1 FROM nome_tabella WHERE indirizzo = ? AND password = ? LIMIT 1";
+  try{
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $email, $password);
+
+    // Esegui la query
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+      header("Location: homepage.php");
+    } else {
+      $loginErr = "Email o password non valide.";
+    }
+  } catch (Exception $ex) {
+    $message = $ex->getMessage();
+    header("refresh:2");
+  }
+  
+
+
+
   // Verifica le credenziali dalla sessione
-  if (isset($_SESSION['user']) && $_SESSION['user']['email'] === $email && $_SESSION['user']['password'] === $password) {
+  /*if (isset($_SESSION['user']) && $_SESSION['user']['email'] === $email && $_SESSION['user']['password'] === $password) {
     header("Location: homepage.php"); // Reindirizza alla homepage
     exit();
   } else {
     $loginErr = "Email o password non valide.";
-  }
+  }*/
 }
 
 function test_input($data) {
