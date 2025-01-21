@@ -11,6 +11,7 @@
 </head>
 
 <?php
+session_start();
 $loginErr = "";
 
 // Controlla se i dati del form sono inviati
@@ -18,35 +19,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = test_input($_POST['mail']);
   $password = test_input($_POST['pwd']);
 
-  $sql = "SELECT 1 FROM nome_tabella WHERE indirizzo = ? AND password = ? LIMIT 1";
+  // Query sicura usando Prepared Statement
+  $sql = "SELECT * FROM taccount WHERE mail = ? AND pass = ?";
+
   try{
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $password);
+    $stmt = $db_conn->prepare($sql);
+    
+    if ($stmt) {
+      // Associa i parametri
+      $stmt->bind_param("ss", $email, $password);
 
-    // Esegui la query
-    $stmt->execute();
-    $result = $stmt->get_result();
+      // Esegui la query
+      $stmt->execute();
+      $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-      header("Location: homepage.php");
+      if ($result->num_rows > 0) {
+        $_SESSION['user_mail'] = $result->fetch_assoc()['mail'];
+
+        header("Location: homepage.php");
+        exit; // Assicurati di fermare l'esecuzione dopo il redirect
+      } else {
+        $loginErr = "Email o password non valide.";
+      }
+
+      // Chiudi lo statement
+      $stmt->close();
     } else {
-      $loginErr = "Email o password non valide.";
+      $loginErr = "Errore nel preparare la query.";
     }
-  } catch (Exception $ex) {
+  }catch (Exception $ex) {
     $message = $ex->getMessage();
     header("refresh:2");
   }
-  
-
-
-
-  // Verifica le credenziali dalla sessione
-  /*if (isset($_SESSION['user']) && $_SESSION['user']['email'] === $email && $_SESSION['user']['password'] === $password) {
-    header("Location: homepage.php"); // Reindirizza alla homepage
-    exit();
-  } else {
-    $loginErr = "Email o password non valide.";
-  }*/
 }
 
 function test_input($data) {
