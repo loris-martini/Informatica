@@ -12,7 +12,10 @@
 
 <?php
 session_start();
+<<<<<<< HEAD
 $_SESSION['logged'] = false;
+=======
+>>>>>>> 168aceafc294939a8849ee5819d2149d9301301e
 $loginErr = "";
 
 // Controlla se i dati del form sono inviati
@@ -20,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = test_input($_POST['mail']);
   $password = test_input($_POST['pwd']);
 
+<<<<<<< HEAD
   $sql = "SELECT * FROM taccount WHERE mail = ?";
   try{
     $stmt = $db_conn->prepare($sql);
@@ -40,11 +44,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
           $loginErr = "Email o password non valide.";
         }
-    } else {
-      $loginErr = "Email o password non valide.";
-    }
+=======
+  // Query sicura usando Prepared Statement
+  $sql = "SELECT * FROM taccount WHERE mail = ? AND pass = ?";
+
+  try{
+    $stmt = $db_conn->prepare($sql);
+    
+    if ($stmt) {
+      // Associa i parametri
+      $stmt->bind_param("ss", $email, $password);
+
+      // Esegui la query
+      $stmt->execute();
+      $result = $stmt->get_result();
+
+      if ($result->num_rows > 0) {
+        $_SESSION['user_mail'] = $result->fetch_assoc()['mail'];
+
+        header("Location: homepage.php");
+        exit; // Assicurati di fermare l'esecuzione dopo il redirect
+      } else {
+        $loginErr = "Email o password non valide.";
+      }
+
       // Chiudi lo statement
       $stmt->close();
+>>>>>>> 168aceafc294939a8849ee5819d2149d9301301e
+    } else {
+      $loginErr = "Errore nel preparare la query.";
+    }
+<<<<<<< HEAD
+      // Chiudi lo statement
+      $stmt->close();
+=======
+>>>>>>> 168aceafc294939a8849ee5819d2149d9301301e
   }catch (Exception $ex) {
     $message = $ex->getMessage();
     header("refresh:2");
