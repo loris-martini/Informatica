@@ -15,7 +15,9 @@
 </style>
 
 <?php
-$name = $surname = $email = $pwd = $emailErr = $passwordErr = "";
+session_start();
+$_SESSION['logged'] = false;
+$name = $surname = $email = $pwd = $emailErr = $passwordErr = $registrazioneError = "";
 $isFormValid = true;
 
 // Controlla se i dati del form sono inviati
@@ -43,7 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mail = @mysqli_real_escape_string($db_conn, strtolower(filtro_testo($_POST['mail'])));
     $password = @mysqli_real_escape_string($db_conn, filtro_testo($_POST['pwd']));
 
-    $query_insert = "INSERT INTO taccount (nome, cognome, mail, pass) VALUES('$nome', '$surname', '$mail', '$password')";
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $query_insert = "INSERT INTO taccount (nome, cognome, mail, pass) VALUES('$nome', '$surname', '$mail', '$hashedPassword')";
 
     try {
       $insert = @mysqli_query($db_conn, $query_insert);
@@ -54,6 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       exit();
     } catch (Exception $ex) {
       $message = $ex->getMessage();
+
+      if (@mysqli_errno($db_conn) == 4025) // errore generato dai check
+        $message = "nome e/o cognome errati!";
+      
+      if (@mysqli_errno($db_conn) == 1062) // errore generato dai campi unique
+        $message = "contatto già esistente!";
+
+      if (@mysqli_errno($db_conn) == 1644) // errore generato dai trigger
+        $message = @mysqli_error($db_conn); 
+
+      $registrazioneError = $message;
       header("refresh:2");
     }
   }
@@ -77,7 +92,7 @@ function test_input($data) {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="registrazione.php">Registrazione</a>
@@ -118,6 +133,7 @@ function test_input($data) {
         <span class="error">* <?= $passwordErr;?></span>
         <input type="password" class="form-control" name="pwd" placeholder="Password" required>
       </div>
+      <span class="text-danger"><?= $registrazioneError; ?></span>
       <input class="btn btn-light btn-lg" type="submit" name="submit" value="Registrati">
     </form>
   </div>

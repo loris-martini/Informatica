@@ -11,6 +11,8 @@
 </head>
 
 <?php
+session_start();
+$_SESSION['logged'] = false;
 $loginErr = "";
 
 // Controlla se i dati del form sono inviati
@@ -18,35 +20,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = test_input($_POST['mail']);
   $password = test_input($_POST['pwd']);
 
-  $sql = "SELECT 1 FROM nome_tabella WHERE indirizzo = ? AND password = ? LIMIT 1";
+  $sql = "SELECT * FROM taccount WHERE mail = ?";
   try{
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $password);
-
-    // Esegui la query
+    $stmt = $db_conn->prepare($sql);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-      header("Location: homepage.php");
+        $user = $result->fetch_assoc();
+        $hashedPassword = $user['pass'];
+
+        // Confronta la password inserita con l'hash
+        if (password_verify($password, $hashedPassword)) {
+          $_SESSION['user_mail'] = $user['mail'];
+          $_SESSION['logged'] = true;
+          header("Location: homepage.php");
+          exit;
+        } else {
+          $loginErr = "Email o password non valide.";
+        }
     } else {
       $loginErr = "Email o password non valide.";
     }
-  } catch (Exception $ex) {
+      // Chiudi lo statement
+      $stmt->close();
+  }catch (Exception $ex) {
     $message = $ex->getMessage();
     header("refresh:2");
   }
-  
-
-
-
-  // Verifica le credenziali dalla sessione
-  /*if (isset($_SESSION['user']) && $_SESSION['user']['email'] === $email && $_SESSION['user']['password'] === $password) {
-    header("Location: homepage.php"); // Reindirizza alla homepage
-    exit();
-  } else {
-    $loginErr = "Email o password non valide.";
-  }*/
 }
 
 function test_input($data) {
@@ -66,7 +68,7 @@ function test_input($data) {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="registrazione.php">Registrazione</a>

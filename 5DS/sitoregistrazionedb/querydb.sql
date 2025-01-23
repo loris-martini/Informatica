@@ -8,7 +8,7 @@ CREATE TABLE taccount (
     nome                        VARCHAR(20)         NOT NULL,
     cognome                     VARCHAR(20)         NOT NULL,
     mail                        VARCHAR(40)         NOT NULL    UNIQUE,
-    pass                        VARCHAR(20)         NOT NULL,
+    pass                        CHAR(60)         NOT NULL,
     data_nascita                DATE,  
  
     PRIMARY KEY(mail)
