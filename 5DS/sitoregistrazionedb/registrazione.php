@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mail = @mysqli_real_escape_string($db_conn, strtolower(filtro_testo($_POST['mail'])));
     $password = @mysqli_real_escape_string($db_conn, filtro_testo($_POST['pwd']));
 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
     $query_insert = "INSERT INTO taccount (nome, cognome, mail, pass) VALUES('$nome', '$surname', '$mail', '$hashedPassword')";
 

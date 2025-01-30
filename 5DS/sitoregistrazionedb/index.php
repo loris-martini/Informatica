@@ -1,7 +1,6 @@
 <?php
   include 'connessione.php';
   include 'funzioni.php';
-  include 'querydb.php';
   session_start();
 ?>  
 <!DOCTYPE html>

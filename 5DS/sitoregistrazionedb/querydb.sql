@@ -1,5 +1,4 @@
-<?php 
-$createdb = "DROP DATABASE IF EXISTS my_martini;
+DROP DATABASE IF EXISTS my_martini;
 
 CREATE DATABASE my_martini DEFAULT CHARACTER SET = utf8;
 
@@ -13,5 +12,4 @@ CREATE TABLE taccount (
     data_nascita                DATE,  
  
     PRIMARY KEY(mail)
-) ENGINE = InnoDB;";
- ?>
+) ENGINE = InnoDB;

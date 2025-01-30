@@ -19,12 +19,12 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_mail'])) {
+if (!isset($_SESSION['user'])) {
   header("Location: login.php"); // Reindirizza al login se non autenticato
   exit;
 }
 
-$mail = $_SESSION['user_mail'];
+$mail = $_SESSION['user']['mail'];
 $sql = "SELECT * FROM taccount WHERE mail = ?";
 
 try{

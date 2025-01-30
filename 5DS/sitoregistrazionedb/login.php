@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Confronta la password inserita con l'hash
       if (password_verify($password, $hashedPassword)) {
-        $_SESSION['user_mail'] = $user['mail'];
+        $_SESSION['user'] = $user;
         $_SESSION['logged'] = true;
         header("Location: homepage.php");
         exit;
