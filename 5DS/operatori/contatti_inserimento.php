@@ -74,8 +74,8 @@
             $data_nascita   = @mysqli_real_escape_string($db_conn, filtro_testo($_POST['txtDataNascita']));
             $ora_nascita    = @mysqli_real_escape_string($db_conn, filtro_testo($_POST['txtOraNascita']));
 
-            $query_insert = "INSERT INTO tcontatti (nome, cognome, codice_fiscale, data_nascita, ora_nascita, matricola) "
-                            . "VALUES('$nome', '$cognome', '$codice_fiscale', '$data_nascita', '$ora_nascita', '$matricola')";
+            $query_insert = "INSERT INTO tcontatti (nome, cognome, codice_fiscale, matricola,data_nascita, ora_nascita) "
+                            . "VALUES('$nome', '$cognome', '$codice_fiscale', '$matricola', '$data_nascita', '$ora_nascita')";
 
             try {
                 $insert = mysqli_query($db_conn, $query_insert);
@@ -84,7 +84,7 @@
                     $message = "Contatto inserito con successo!";
                     $dangerNome = $dangerCognome = $dangerFiscale = $dangerMatricola = $dangerData = $dangerOra = '';
                     $nome = $cognome = $codice_fiscale = $matricola = $data_nascita = $ora_nascita = '';
-                    header("refresh:3; contatti_inserimento_errorn.php");
+                    header("refresh:1; contatti_inserimento.php");
                 }                                
             } catch (Exception $ex) {                        
                 $message = $ex->getMessage();
