@@ -35,7 +35,7 @@ try{
     }
 
 } catch (Exception $ex) {       
-    //gestione errori
+    $message = @mysqli_error($db_conn);
 } 
 
 if (isset($_POST['btnInserisci'])) {
@@ -75,14 +75,31 @@ if (isset($_POST['btnInserisci'])) {
             $query = "INSERT INTO ttelefoni (numero, tipo, fk_contatti, fk_operatore) VALUES ('$numero', '$tipo', '$contatto', '$operatore')";
             $result = mysqli_query($db_conn, $query);
             if ($result){
-                $message = "Contatto inserito con successo!";
-                $dangerNome = $dangerCognome = $dangerFiscale = $dangerMatricola = $dangerData = $dangerOra = '';
-                $nome = $cognome = $codice_fiscale = $matricola = $data_nascita = $ora_nascita = '';
-                header("refresh:1; telefoni_inserimento.php");
+                $message = "Numero inserito con successo!";
+                session_unset();
+                $numero = $tipo = $contatto = $operatore = '';
+                $dangerNumero = $dangerTipo = $dangerContatto = $dangerOperatore = '';
+                header("refresh:2; telefoni_inserimento.php");
             }     
 
         }catch (Exception $ex) {       
             //gestione errori
+            if (@mysqli_errno($db_conn) == 1452) {
+                $message = @mysqli_error($db_conn);
+                if(strpos($message, 'FOREIGN KEY (`fk_contatti`)') !== false){
+                    $message = "Contatto da associare non trovato (non cambiare il value)";
+                }
+                if(strpos($message, 'FOREIGN KEY (`fk_operatori`)') !== false){
+                    $message = "Operatore da associare non trovato (non cambiare il value)";
+                }
+            }
+            if (@mysqli_errno($db_conn) == 1644) {
+                $message = @mysqli_error($db_conn);
+                if (strpos($message, 'numero') !== false) {
+                    $message = "Numero non inserito! Il numero non è valido";
+                    $dangerNumero = 'error';
+                }
+            }
         } 
     }    
     echo $message;   
@@ -126,7 +143,7 @@ if (isset($_POST['btnReset'])) {
                     foreach ($contatti as $contatto) {
                         $id_contatto = $contatto['id'];
                         $nome_contatto = $contatto['nome'];
-                        $selected = ($contatto['id'] == $_SESSION['insert']['contatto']) ? 'selected' : '';
+                        $selected = ($id_contatto == $_SESSION['insert']['contatto']) ? 'selected' : '';
                         echo "<option value=\"$id_contatto\" $selected>$nome_contatto</option>";
                     }
                     ?>
@@ -136,7 +153,7 @@ if (isset($_POST['btnReset'])) {
         <tr>
             <td>Numero</td>
             <td class="<?=$dangerNumero?>">
-                <input type="tel" name="numero" pattern="[0-9]{10}" value="<?= isset($_SESSION['insert']['numero']) ? $_SESSION['insert']['numero'] : '' ?>">
+                <input type="tel" name="numero" value="<?= isset($_SESSION['insert']['numero']) ? $_SESSION['insert']['numero'] : '' ?>">
             </td>
         </tr>
         <tr>
@@ -148,7 +165,7 @@ if (isset($_POST['btnReset'])) {
                     foreach ($operatori as $operatore) {
                         $id_operatore = $operatore['id'];
                         $nome_operatore = $operatore['nome'];
-                        $selected = ($operatore == $_SESSION['insert']['operatore']) ? 'selected' : '';
+                        $selected = ($id_operatore == $_SESSION['insert']['operatore']) ? 'selected' : '';
                         echo "<option value=\"$id_operatore\" $selected>$nome_operatore</option>";
                     }
                     ?>
@@ -171,6 +188,10 @@ if (isset($_POST['btnReset'])) {
         </tr>
     </table>
 </form>
+<br>
+<a href="contatti_inserimento.php">
+    <button>Contatti</button>
+</a>
 </center>
 </body>
 </html>

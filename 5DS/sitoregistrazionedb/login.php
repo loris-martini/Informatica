@@ -17,49 +17,36 @@ $loginErr = "";
 
 // Controlla se i dati del form sono inviati
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = test_input($_POST['mail']);
-  $password = test_input($_POST['pwd']);
+  $email = filtro_testo($_POST['mail']);
+  $password = filtro_testo($_POST['pwd']);
 
-  $sql = "SELECT * FROM taccount WHERE mail = ?";
+  $sql = "SELECT * FROM taccount WHERE mail = '$email'";
   try{
-    $stmt = $db_conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $result = mysqli_query($db_conn, $sql);
 
-    if ($result->num_rows > 0) {
-      $user = $result->fetch_assoc();
-      $hashedPassword = $user['pass'];
+    if(mysqli_num_rows($result) > 0){
+      $row = mysqli_fetch_assoc($result);
+      $hashedPassword = $row['pass'];
 
       // Confronta la password inserita con l'hash
       if (password_verify($password, $hashedPassword)) {
-        $_SESSION['user'] = $user;
+        $_SESSION['user'] = $row;
         $_SESSION['logged'] = true;
         header("Location: homepage.php");
         exit;
       } else {
         $loginErr = "Email o password non valide.";
       }
-
-      // Chiudi lo statement
-      $stmt->close();
+      
     } else {
       $loginErr = "Errore nel preparare la query.";
     }
-      // Chiudi lo statement
-      $stmt->close();
   }catch (Exception $ex) {
     $message = $ex->getMessage();
     header("refresh:2");
   }
 }
 
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
 ?>
 
 <body>

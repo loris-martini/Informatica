@@ -16,7 +16,7 @@
             border: 2px solid;
         }
         .error {
-            border: 5px solid red;
+            border: 2px solid red;
             background-color: #ffe5e5;
             border-radius: 5px;
         }
@@ -102,18 +102,18 @@
 
                 if (@mysqli_errno($db_conn) == 1644) {
                     $message = @mysqli_error($db_conn);
-                    if (strpos($message, 'nome') !== false) {
-                        $message = "Contatto non inserito! Il nome non è valido";
-                        $dangerNome = 'error';
-                    }
-                    if (strpos($message, 'cognome') !== false) {
-                        $message = "Contatto non inserito! Il cognome non è valido";
-                        $dangerCognome = 'error';
-                    }
                     if (strpos($message, 'entrambi') !== false) {
                         $message = "Contatto non inserito! Nome e cognome non validi";
                         $dangerCognome = 'error';
                         $dangerNome = 'error';
+                    }else{
+                        if (strpos($message, 'cognome') !== false) {
+                            $message = "Contatto non inserito! Il cognome non è valido";
+                            $dangerCognome = 'error';
+                        }elseif (strpos($message, 'nome') !== false) {
+                            $message = "Contatto non inserito! Il nome non è valido";
+                            $dangerNome = 'error';
+                        }
                     }
                     if (strpos($message, 'data') !== false) {
                         $message = "Contatto non inserito! Data di nascita non valida";
@@ -189,6 +189,10 @@
         </tr>
     </table>
 </form>
+<br>
+<a href="telefoni_inserimento.php">
+    <button>Telefoni</button>
+</a>
 </center>
 </body>
 </html>

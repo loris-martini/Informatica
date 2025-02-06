@@ -17,61 +17,6 @@ CREATE TABLE tcontatti (
     INDEX icontatti (nome, cognome)
 ) ENGINE = InnoDB;
 
-DELIMITER $$
-
-CREATE TRIGGER trg_nome_cognome_insert
-BEFORE INSERT ON tcontatti
-FOR EACH ROW
-BEGIN
-    IF CHAR_LENGTH(NEW.nome) < 3 AND CHAR_LENGTH(NEW.cognome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Entrambi nome e cognome devono avere almeno 3 caratteri';
-    END IF;
-    IF CHAR_LENGTH(NEW.nome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Il nome deve avere almeno 3 caratteri';
-    END IF;
-    IF CHAR_LENGTH(NEW.cognome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Il cognome deve avere almeno 3 caratteri';
-    END IF;
-END $$
-
-CREATE TRIGGER trg_data_nascita_insert
-BEFORE INSERT ON tcontatti
-FOR EACH ROW
-BEGIN
-    IF NEW.data_nascita > CURDATE() THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La data di nascita non può essere nel futuro';
-    END IF;
-END $$
-
-CREATE TRIGGER trg_codice_fiscale_insert
-BEFORE INSERT ON tcontatti
-FOR EACH ROW
-BEGIN    
-    IF NOT NEW.codice_fiscale REGEXP '^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codice fiscale non valido';
-    END IF;
-END $$
-
-CREATE TRIGGER trg_matricola_insert
-BEFORE INSERT ON tcontatti
-FOR EACH ROW
-    BEGIN    
-        IF NOT NEW.matricola REGEXP '^[a-zA-Z]{2}\\d{3}$' THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'matricola';
-        END IF;
-    END $$
-
-
-CREATE TRIGGER trg_matricola_update
-BEFORE UPDATE ON tcontatti
-FOR EACH ROW
-    BEGIN    
-        IF NOT NEW.matricola REGEXP '^[a-zA-Z]{2}\\d{3}$' THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'matricola';
-        END IF;
-    END $$
-
-DELIMITER ;
 
 CREATE TABLE toperatori (
     id_operatori INT NOT NULL AUTO_INCREMENT,
@@ -82,16 +27,73 @@ CREATE TABLE toperatori (
 
 CREATE TABLE ttelefoni (
     id_telefoni  BIGINT NOT NULL AUTO_INCREMENT,
-    numero       VARCHAR(20),
+    numero       VARCHAR(15),
     tipo         ENUM('P', 'C', 'L'), /* Personale - Casa - Lavoro */
-    fk_contatti  BIGINT NULL, 
+    fk_contatti  BIGINT NOT NULL, 
     fk_operatore INT NOT NULL,
     PRIMARY KEY(id_telefoni),
     INDEX itelefoni (numero),
-    FOREIGN KEY(fk_contatti) REFERENCES tcontatti(id_contatti)
+    FOREIGN KEY(fk_contatti) REFERENCES tcontatti(id_contatti) /* Integrità refernziale -> sono certo che la chiave primaria dell'altra tabella esiste veramente*/
         ON UPDATE CASCADE
-        ON DELETE SET NULL,
+        ON DELETE CASCADE,
     FOREIGN KEY(fk_operatore) REFERENCES toperatori(id_operatori)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 ) ENGINE = InnoDB;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_nome_cognome_insert /*NOME*/
+BEFORE INSERT ON tcontatti
+FOR EACH ROW
+BEGIN
+    IF CHAR_LENGTH(NEW.nome) < 3 AND CHAR_LENGTH(NEW.cognome) < 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'entrambi';
+    END IF;
+    IF CHAR_LENGTH(NEW.nome) < 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nome';
+    END IF;
+    IF CHAR_LENGTH(NEW.cognome) < 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'cognome';
+    END IF;
+END $$
+
+CREATE TRIGGER trg_data_nascita_insert /*DATA*/
+BEFORE INSERT ON tcontatti
+FOR EACH ROW
+BEGIN
+    IF NEW.data_nascita > CURDATE() THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La data di nascita non può essere nel futuro';
+    END IF;
+END $$
+
+CREATE TRIGGER trg_codice_fiscale_insert /*CODICE FISCALE*/
+BEFORE INSERT ON tcontatti
+FOR EACH ROW
+BEGIN    
+    IF NOT NEW.codice_fiscale REGEXP '^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codice fiscale non valido';
+    END IF;
+END $$
+
+CREATE TRIGGER trg_matricola_insert /*MATRICOLA*/
+BEFORE INSERT ON tcontatti
+FOR EACH ROW
+    BEGIN    
+        IF NOT NEW.matricola REGEXP '^[a-zA-Z]{2}\\d{3}$' THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'matricola';
+        END IF;
+    END $$
+
+CREATE TRIGGER trg_numero_insert /*NUMERO*/
+BEFORE INSERT ON ttelefoni
+FOR EACH ROW
+    BEGIN   
+        IF NEW.numero NOT REGEXP '^[0-9]{10}$' THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'numero';
+        END IF;
+    END $$     
+
+DELIMITER ;
+       
