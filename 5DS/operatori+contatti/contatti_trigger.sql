@@ -12,7 +12,6 @@ CREATE TABLE tcontatti (
     data_nascita    DATE,
     ora_nascita     TIME,    
     attivo          BOOLEAN     DEFAULT TRUE,
-    CONSTRAINT chk_nome_cognome CHECK(CHAR_LENGTH(nome) >= 3 AND CHAR_LENGTH(cognome) >= 3),
     PRIMARY KEY(id_contatti),
     INDEX icontatti (nome, cognome)
 ) ENGINE = InnoDB;
@@ -49,13 +48,13 @@ BEFORE INSERT ON tcontatti
 FOR EACH ROW
 BEGIN
     IF CHAR_LENGTH(NEW.nome) < 3 AND CHAR_LENGTH(NEW.cognome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'entrambi';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 001: Contatto non inserito! Nome e cognome non validi';
     END IF;
     IF CHAR_LENGTH(NEW.nome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nome';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 002: Contatto non inserito! Cognome non valido';
     END IF;
     IF CHAR_LENGTH(NEW.cognome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'cognome';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 003: Contatto non inserito! Nome non valido';
     END IF;
 END $$
 
@@ -64,7 +63,7 @@ BEFORE INSERT ON tcontatti
 FOR EACH ROW
 BEGIN
     IF NEW.data_nascita > CURDATE() THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La data di nascita non può essere nel futuro';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 004: Contatto non inserito! Data di nascita non valida';
     END IF;
 END $$
 
@@ -73,7 +72,7 @@ BEFORE INSERT ON tcontatti
 FOR EACH ROW
 BEGIN    
     IF NOT NEW.codice_fiscale REGEXP '^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codice fiscale non valido';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 005: Contatto non inserito! Formato codice fiscale errato';
     END IF;
 END $$
 
@@ -82,7 +81,7 @@ BEFORE INSERT ON tcontatti
 FOR EACH ROW
     BEGIN    
         IF NOT NEW.matricola REGEXP '^[a-zA-Z]{2}\\d{3}$' THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'matricola';
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 006: Contatto non inserito! Formato matricola errato';
         END IF;
     END $$
 
@@ -91,7 +90,7 @@ BEFORE INSERT ON ttelefoni
 FOR EACH ROW
     BEGIN   
         IF NEW.numero NOT REGEXP '^[0-9]{10}$' THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'numero';
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Errore 007: Contatto non inserito! Formato numero di telefono errato';
         END IF;
     END $$     
 

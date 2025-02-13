@@ -10,7 +10,13 @@
 <head>
     <title>Contatti inserimento</title>
     <meta charset="UTF-8">
-    <style>
+    <!-- CSS di Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- JavaScript di Bootstrap (necessario per componenti interattivi) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
         table {
             border-collapse: collapse;
         }
@@ -23,7 +29,6 @@
             border-radius: 5px;
         }
     </style>
-</head>
 <body>
 <?php
 
@@ -65,6 +70,18 @@
         $operatore      = isset($_POST['operatore']) ? filtro_testo($_POST['operatore']) : '';
 
         $valid = true;
+
+        $_SESSION['user'] = [
+            "nome"              => $nome,
+            "cognome"           => $cognome,
+            "codice_fiscale"    => $codice_fiscale,
+            "matricola"         => $matricola,
+            "data_nascita"      => $data_nascita,
+            "ora_nascita"       => $ora_nascita,
+            "numero"            => $numero,
+            "operatore"         => $operatore,
+            "tipo"              => $tipo
+        ];
         
         if (empty($nome)) {
             $dangerNome = 'error';
@@ -118,81 +135,88 @@
             $tipo           = @mysqli_real_escape_string($db_conn, strtoupper(filtro_testo($_POST['tipo'])));
             $operatore      = @mysqli_real_escape_string($db_conn, strtoupper(filtro_testo($_POST['operatore'])));
 
-            $_SESSION['user'] = [
-                "nome"              => $nome,
-                "cognome"           => $cognome,
-                "codice_fiscale"    => $codice_fiscale,
-                "matricola"         => $matricola,
-                "data_nascita"      => $data_nascita,
-                "ora_nascita"       => $ora_nascita,
-                "numero"            => $numero,
-                "operatore"         => $operatore,
-                "tipo"              => $tipo
-            ];
-
             
             try {
-                $query = "INSERT INTO tcontatti (nome, cognome, codice_fiscale, matricola, data_nascita, ora_nascita) VALUES('$nome', '$cognome', '$codice_fiscale', '$matricola', '$data_nascita', '$ora_nascita')";
-                $insert = mysqli_query($db_conn, $query);
+                mysqli_begin_transaction($db_conn);
+
+                $query1 = "INSERT INTO tcontatti (nome, cognome, codice_fiscale, matricola, data_nascita, ora_nascita) 
+                        VALUES('$nome', '$cognome', '$codice_fiscale', '$matricola', '$data_nascita', '$ora_nascita')";
+                $insert1 = mysqli_query($db_conn, $query1);
+
+                if (!$insert1) {
+                    throw new Exception("Errore nell'inserimento in tcontatti: " . mysqli_error($db_conn));
+                }
 
                 $id_user = mysqli_insert_id($db_conn);
 
-                $query = "INSERT INTO ttelefoni (numero, tipo, fk_contatti, fk_operatore) VALUES('$numero','$tipo','$id_user','$operatore')";
-                $insert = mysqli_query($db_conn, $query);
+                $query2 = "INSERT INTO ttelefoni (numero, tipo, fk_contatti, fk_operatore) 
+                        VALUES('$numero', '$tipo', '$id_user', '$operatore')";
+                $insert2 = mysqli_query($db_conn, $query2);
 
-                if ($insert){
-                    $message = "Contatto inserito con successo!";
-                    $dangerNome = $dangerCognome = $dangerFiscale = $dangerMatricola = $dangerData = $dangerOra = '';
-                    $nome = $cognome = $codice_fiscale = $matricola = $data_nascita = $ora_nascita = '';
-
-                    $numero = $tipo  = $operatore = '';
-                    $dangerNumero = $dangerTipo = $dangerOperatore = '';
-
-                    session_unset();
-
-                    header("refresh:1; contatti_telefono_operatore_inserimento.php");
-                }                                
-            } catch (Exception $ex) {                        
-                $message = $ex->getMessage();
-
-                if (@mysqli_errno($db_conn) == 1062) { 
-                    $message = @mysqli_error($db_conn);
-                    if (strpos($message, 'matricola') !== false) {
-                        $message = "Contatto non inserito! La matricola è già registrata";
-                        $dangerMatricola = 'error';
-                    } elseif (strpos($message, 'codice_fiscale') !== false) {
-                        $message = "Contatto non inserito! Il codice fiscale è già inserito";
-                        $dangerFiscale = 'error';
-                    }
+                if (!$insert2) {
+                    throw new Exception("Errore nell'inserimento in ttelefoni: " . mysqli_error($db_conn));
                 }
 
-                if (@mysqli_errno($db_conn) == 1644) {
-                    $message = @mysqli_error($db_conn);
-                    if (strpos($message, 'entrambi') !== false) {
-                        $message = "Contatto non inserito! Nome e cognome non validi";
-                        $dangerCognome = 'error';
-                        $dangerNome = 'error';
-                    }else{
-                        if (strpos($message, 'cognome') !== false) {
-                            $message = "Contatto non inserito! Il cognome non è valido";
-                            $dangerCognome = 'error';
-                        }elseif (strpos($message, 'nome') !== false) {
-                            $message = "Contatto non inserito! Il nome non è valido";
-                            $dangerNome = 'error';
+                mysqli_commit($db_conn);
+
+                $message = "Contatto inserito con successo!";
+                $dangerNome = $dangerCognome = $dangerFiscale = $dangerMatricola = $dangerData = $dangerOra = '';
+                $nome = $cognome = $codice_fiscale = $matricola = $data_nascita = $ora_nascita = '';
+
+                $numero = $tipo  = $operatore = '';
+                $dangerNumero = $dangerTipo = $dangerOperatore = '';
+
+                session_unset();
+
+                header("refresh:1; contatti_telefono_operatore_inserimento.php");                               
+            } catch (Exception $ex) {                        
+                $message = @mysqli_error($db_conn);
+                $error_code = @mysqli_errno($db_conn);
+
+                switch ($error_code) {
+                    case 1062:
+                        if (strpos($message, 'matricola') !== false) {
+                            $message = "Errore: La matricola è già registrata!";
+                            $dangerMatricola = 'error';
+                        } elseif (strpos($message, 'codice_fiscale') !== false) {
+                            $message = "Errore: Il codice fiscale è già presente!";
+                            $dangerFiscale = 'error';
                         }
-                    }
-                    if (strpos($message, 'data') !== false) {
-                        $message = "Contatto non inserito! Data di nascita non valida";
-                        $dangerData = 'error';
-                    }
-                    if (strpos($message, 'codice_fiscale') !== false) {
-                        $message = "Contatto non inserito! Formato codice fiscale sbagliato";
-                        $dangerFiscale = 'error';
-                    }
-                    if (strpos($message, 'matricola') !== false) {
-                        $message = "Contatto non inserito! Formato matricola sbagliato";
-                        $dangerMatricola = 'error';
-                    }
+                        break;
+            
+                    case 1452:
+                        if (strpos($message, 'fk_operatore') !== false) {
+                            $message = "Errore: L'operatore selezionato non esiste!";
+                            $dangerOperatore = 'error';
+                        }
+                        break;
+            
+                    case 1644:
+                        if (strpos($message, '001') !== false) {
+                            $dangerCognome = 'error';
+                            $dangerNome = 'error';
+                        } elseif (strpos($message, '002') !== false) {
+                            $dangerCognome = 'error';
+                        } elseif (strpos($message, '003') !== false) {
+                            $dangerNome = 'error';
+                        } elseif (strpos($message, '004') !== false) {
+                            $dangerData = 'error';
+                        } elseif (strpos($message, '005') !== false) {
+                            $dangerFiscale = 'error';
+                        } elseif (strpos($message, '006') !== false) {
+                            $dangerMatricola = 'error';
+                        } elseif (strpos($message, '007') !== false) {
+                            $dangerNumero = 'error';
+                        }
+                        break;
+            
+                    case 1645:
+                        $dangerTipo = 'error';
+                        break;
+            
+                    default:
+                        $message = "Errore sconosciuto: " . $message;
+                        break;
                 }
             }
 
