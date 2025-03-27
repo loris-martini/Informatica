@@ -58,7 +58,7 @@ CREATE TABLE GRUPPO_ESIBIZIONE (
 );
 
 
-/*1 DDL aggirnato con 2 DDL*/
+/*1 DDL aggirnato con 2 DDL
 INSERT INTO GRUPPO (Nome, AnnoFondazione) VALUES ('Queen', 1970), ('The Beatles', 1960);
 INSERT INTO ESECUTORE (Nominativo, Nazionalità, Compenso, AnnoNascita) VALUES ('Freddie Mercury', 'UK', 50000, 1960), ('John Lennon', 'UK', 60000, 1950);
 INSERT INTO LUOGO (Nome, Citta, Nazione) VALUES ('Wembley Stadium', 'Londra', 'Regno Unito'), ('Madison Square Garden', 'New York', 'USA');
@@ -67,6 +67,7 @@ INSERT INTO ESIBIZIONE (Data, Luogo, Spettatori, Nome) VALUES ('1985-07-13', 1, 
 INSERT INTO GRUPPO_ESECUTORE (IDGruppo, IDEsecutore) VALUES (1, 1), (2, 2);
 INSERT INTO GRUPPO_ESIBIZIONE (IDGruppo, IDEsibizione) VALUES (1, 1), (2, 2);
 
+*/
 /*2 DDL*/
 ALTER TABLE ESIBIZIONE DROP FOREIGN KEY esibizione_ibfk_1;
 ALTER TABLE ESIBIZIONE DROP COLUMN Luogo;
@@ -102,3 +103,46 @@ ADD CONSTRAINT NomeGruppo_Unique UNIQUE (Nome);
 /*7*/
 ALTER TABLE ESECUTORE
 MODIFY COLUMN Nominativo VARCHAR(70) NOT NULL;
+
+/*ES 5*/
+SELECT COUNT(*) FROM ESECUTORE;
+
+SELECT ID, Data, MIN(Spettatori) AS Spettatori, Luogo, Nome 
+FROM ESIBIZIONE;
+
+SELECT COUNT(*) AS Componenti 
+FROM GRUPPO_ESECUTORE GE JOIN GRUPPO G ON G.ID = GE.IDGruppo 
+WHERE G.Nome = 'ColdPlay';
+
+SELECT COUNT(*) AS Esibizioni 
+FROM LUOGO L JOIN ESIBIZIONE E ON L.ID = E.Luogo 
+WHERE L.Nazione = 'Italia';
+
+/*ES 6*/
+/*1*/
+SELECT G.Nome, SUM(E.Compenso) AS SommaCompensi 
+FROM ESECUTORE E JOIN GRUPPO_ESECUTORE GE ON E.ID = GE.IDGruppo JOIN GRUPPO G ON G.ID = GE.IDGruppo 
+GROUP BY E.ID;
+
+/*2*/
+SELECT COUNT(*) AS Esibizioni, SUM(E.Spettatori) AS Spettatori
+FROM ESIBIZIONE E JOIN LUOGO L ON L.ID = E.Luogo
+WHERE L.Nazione = 'Italia';
+
+/*3*/
+SELECT Nazionalità, AVG(Compenso) AS CompensoMedio
+FROM ESECUTORE
+GROUP BY Nazionalità;
+
+/*4*/
+SELECT G.Nome, (2025 - MAX(E.AnnoNascita)) AS EtaMinima
+FROM GRUPPO G JOIN GRUPPO_ESECUTORE GE ON G.ID = GE.IDGruppo JOIN ESECUTORE E ON E.ID = GE.IDEsecutore
+GROUP BY G.ID;
+
+/*5*/
+SELECT G.NOME, MAX(E.Spettatori) AS MaxSpettatori
+FROM GRUPPO G JOIN GRUPPO_ESIBIZIONE GE ON G.ID = GE.IDGruppo JOIN ESIBIZIONE E ON E.ID = GE.IDEsibizione
+GROUP BY G.ID;
+
+/*6*/
+
