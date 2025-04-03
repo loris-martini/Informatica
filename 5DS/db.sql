@@ -114,40 +114,31 @@ INSERT INTO GRUPPO (Nome, AnnoFondazione) VALUES
 ('U2', 1976),
 ('Coldplay', 1996),
 ('The Rolling Stones', 1962),
-('Nirvana', 1987);
+('Nirvana', 1987),
+('Måneskin', 2016),
+('Negramaro', 2000),
+('Subsonica', 1996);
 
 -- Inserimento dati nella tabella ESECUTORE
 INSERT INTO ESECUTORE (Nominativo, Nazionalità, Compenso, AnnoNascita) VALUES
 ('Freddie Mercury', 'UK', 50000, 1946),
-('Brian May', 'UK', 48000, 1947),
-('Roger Taylor', 'UK', 46000, 1949),
-('John Deacon', 'UK', 45000, 1951),
 ('John Lennon', 'UK', 60000, 1940),
-('Paul McCartney', 'UK', 59000, 1942),
-('George Harrison', 'UK', 58000, 1943),
-('Ringo Starr', 'UK', 57000, 1940),
 ('David Gilmour', 'UK', 55000, 1946),
-('Roger Waters', 'UK', 54000, 1943),
-('Richard Wright', 'UK', 53000, 1943),
-('Nick Mason', 'UK', 52000, 1944),
 ('Robert Plant', 'UK', 58000, 1948),
-('Jimmy Page', 'UK', 57000, 1944),
-('John Paul Jones', 'UK', 56000, 1946),
 ('Bono', 'Ireland', 62000, 1960),
-('The Edge', 'Ireland', 61000, 1961),
-('Adam Clayton', 'Ireland', 60000, 1960),
-('Larry Mullen Jr.', 'Ireland', 59000, 1961),
 ('Chris Martin', 'UK', 65000, 1977),
-('Jonny Buckland', 'UK', 64000, 1977),
-('Guy Berryman', 'UK', 63000, 1978),
-('Will Champion', 'UK', 62000, 1978),
 ('Mick Jagger', 'UK', 70000, 1943),
-('Keith Richards', 'UK', 69000, 1943),
-('Charlie Watts', 'UK', 68000, 1941),
-('Ronnie Wood', 'UK', 67000, 1947),
 ('Kurt Cobain', 'USA', 75000, 1967),
-('Krist Novoselic', 'USA', 74000, 1965),
-('Dave Grohl', 'USA', 73000, 1969);
+('Damiano David', 'Italia', 70000, 1999),
+('Victoria De Angelis', 'Italia', 70000, 2000),
+('Thomas Raggi', 'Italia', 70000, 2001),
+('Ethan Torchio', 'Italia', 70000, 2000),
+('Giuliano Sangiorgi', 'Italia', 60000, 1979),
+('Emanuele Spedicato', 'Italia', 60000, 1980),
+('Andrea Mariano', 'Italia', 60000, 1978),
+('Samuel Umberto Romano', 'Italia', 65000, 1972),
+('Massimiliano Casacci', 'Italia', 65000, 1969),
+('Enrico Matta', 'Italia', 65000, 1971);
 
 -- Inserimento dati nella tabella LUOGO
 INSERT INTO LUOGO (Nome, Citta, Nazione) VALUES
@@ -158,46 +149,37 @@ INSERT INTO LUOGO (Nome, Citta, Nazione) VALUES
 ('Stade de France', 'Parigi', 'Francia'),
 ('O2 Arena', 'Londra', 'Regno Unito'),
 ('Hollywood Bowl', 'Los Angeles', 'USA'),
-('Sydney Opera House', 'Sydney', 'Australia');
+('Sydney Opera House', 'Sydney', 'Australia'),
+('Arena di Verona', 'Verona', 'Italia'),
+('Stadio Olimpico', 'Roma', 'Italia'),
+('Mediolanum Forum', 'Milano', 'Italia');
 
 -- Inserimento dati nella tabella ESIBIZIONE
 INSERT INTO ESIBIZIONE (Data, Luogo, Spettatori, Nome) VALUES
 ('1985-07-13', 1, 72000, 'Live Aid'),
-('1986-07-12', 1, 70000, 'Magic Tour'),
-('1974-05-01', 1, 60000, 'Sheer Heart Attack Tour'),
 ('1969-08-15', 2, 50000, 'Woodstock'),
-('1966-08-29', 2, 55000, 'Last Concert'),
-('1965-08-15', 2, 56000, 'Shea Stadium Concert'),
 ('1994-10-29', 3, 80000, 'Division Bell Tour'),
-('1973-03-01', 3, 75000, 'Dark Side of the Moon Tour'),
-('1987-09-11', 3, 78000, 'A Momentary Lapse of Reason Tour'),
 ('1975-05-25', 4, 55000, 'Physical Graffiti Tour'),
-('1971-03-05', 4, 50000, 'Led Zeppelin IV Tour'),
-('1969-01-31', 4, 52000, 'Early Days Tour'),
 ('2001-07-21', 5, 90000, 'Elevation Tour'),
-('1997-08-15', 5, 88000, 'PopMart Tour'),
-('2017-07-22', 5, 92000, 'Joshua Tree Tour'),
 ('2012-06-10', 6, 20000, 'Mylo Xyloto Tour'),
-('2016-07-06', 6, 25000, 'A Head Full of Dreams Tour'),
-('2008-09-20', 6, 22000, 'Viva la Vida Tour');
+('1981-10-18', 7, 18000, 'Tattoo You Tour'),
+('1992-08-30', 8, 40000, 'Nevermind Tour'),
+('2021-07-01', 9, 12000, 'Måneskin Live Verona'),
+('2022-06-15', 10, 50000, 'Måneskin Rock in Roma'),
+('2018-03-05', 11, 15000, 'Negramaro Amore Che Torni Tour'),
+('2019-07-10', 9, 13000, 'Negramaro Live in Verona'),
+('2019-02-09', 11, 11000, 'Subsonica 8 Tour Milano'),
+('2020-01-25', 10, 45000, 'Subsonica Rock in Roma');
 
 -- Inserimento dati nella tabella GRUPPO_ESECUTORE
 INSERT INTO GRUPPO_ESECUTORE (IDGruppo, IDEsecutore) VALUES
-(1, 1), (1, 2), (1, 3), (1, 4),
-(2, 5), (2, 6), (2, 7), (2, 8),
-(3, 9), (3, 10), (3, 11), (3, 12),
-(4, 13), (4, 14), (4, 15),
-(5, 16), (5, 17), (5, 18), (5, 19),
-(6, 20), (6, 21), (6, 22), (6, 23),
-(7, 24), (7, 25), (7, 26), (7, 27),
-(8, 28), (8, 29), (8, 30);
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
+(9, 9), (9, 10), (9, 11), (9, 12),
+(10, 13), (10, 14), (10, 15),
+(11, 16), (11, 17), (11, 18);
 
 -- Inserimento dati nella tabella GRUPPO_ESIBIZIONE
 INSERT INTO GRUPPO_ESIBIZIONE (IDGruppo, IDEsibizione) VALUES
-(1, 1), (1, 2), (1, 3),
-(2, 4), (2, 5), (2, 6),
-(3, 7), (3, 8), (3, 9),
-(4, 10), (4, 11), (4, 12),
-(5, 13), (5, 14), (5, 15),
-(6, 16), (6, 17), (6, 18);
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
+(9, 9), (9, 10), (10, 11), (10, 12), (11, 13), (11, 14);
 
